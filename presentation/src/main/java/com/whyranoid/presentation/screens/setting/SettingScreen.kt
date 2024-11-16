@@ -44,6 +44,7 @@ import com.whyranoid.presentation.screens.mypage.editprofile.UserInfoUiState
 import com.whyranoid.presentation.theme.SystemColor
 import com.whyranoid.presentation.theme.WalkieColor
 import com.whyranoid.presentation.theme.WalkieTypography
+import com.whyranoid.presentation.util.AppVersionUtil
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -188,17 +189,22 @@ fun SettingsList() {
 
     MenuItem(
         text = R.string.license,
-        icon = R.drawable.ic_info
+        icon = R.drawable.ic_info,
+        onClick = {
+        },
     )
 
     MenuItem(
         text = R.string.terms_and_policy,
-        icon = R.drawable.ic_book
+        icon = R.drawable.ic_book,
     )
+
+    val versionName = AppVersionUtil.getVersionName(context)
 
     MenuItem(
         text = R.string.version_info,
-        icon = R.drawable.ic_mobile
+        subInfo = versionName.orEmpty(),
+        icon = R.drawable.ic_mobile,
     )
 
     Spacer(

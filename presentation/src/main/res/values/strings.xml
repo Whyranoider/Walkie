@@ -15,7 +15,7 @@
     <string name="manage_app">앱 관리</string>
     <string name="customer_service">고객센터</string>
     <string name="license">라이센스</string>
-    <string name="terms_and_policy">이용약관 및 운영정책</string>
+    <string name="terms_and_policy">개인정보 처리방침</string>
     <string name="version_info">버전 정보</string>
     <string name="logout">로그아웃</string>
     <string name="delete_account">계정 삭제</string>
