@@ -4,7 +4,7 @@ import com.whyranoid.data.API
 import com.whyranoid.data.model.StatusWithMessage
 import com.whyranoid.data.model.challenge.BadgeResponse
 import com.whyranoid.data.model.challenge.ChallengeDetailResponse
-import com.whyranoid.data.model.challenge.ChallengePreviewResponse
+import com.whyranoid.data.model.challenge.ChallengeResponse
 import com.whyranoid.data.model.challenge.request.ChallengeChangeStatusRequest
 import com.whyranoid.data.model.challenge.request.ChallengeStartRequest
 import retrofit2.Response
@@ -18,19 +18,19 @@ interface ChallengeService {
     @GET(API.NEW_CHALLENGE)
     suspend fun getNewChallenges(
         @Query("walkieId") uid: Int,
-    ): Response<List<ChallengePreviewResponse>>
+    ): Response<List<ChallengeResponse>>
 
     @GET(API.PROGRESSING_CHALLENGE)
-    suspend fun getMyProcessingChallenges(@Query("walkieId") uid: Int): Response<List<ChallengePreviewResponse>>
+    suspend fun getMyProcessingChallenges(@Query("walkieId") uid: Int): Response<List<ChallengeResponse>>
 
     @GET(API.TOP_RANK_CHALLENGE)
-    suspend fun getTopRankChallenges(): Response<List<ChallengePreviewResponse>>
+    suspend fun getTopRankChallenges(): Response<List<ChallengeResponse>>
 
     @GET(API.CHALLENGE_CATEGORY)
     suspend fun getChallengePreviewsByType(
         @Query("walkieId") uid: Int,
         @Query("category") type: String
-    ): Response<List<ChallengePreviewResponse>>
+    ): Response<List<ChallengeResponse>>
 
     @GET(API.CHALLENGE_DETAIL)
     suspend fun getChallengeDetail(
