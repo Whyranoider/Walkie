@@ -20,11 +20,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -63,7 +63,11 @@ fun SettingsScreen(navHostController: NavHostController) {
             TopAppBar { navHostController.popBackStack() }
             ProfileSection(it) {
                 navHostController.navigate(Screen.EditProfileScreen.route) }
-            SettingsList()
+            SettingsList(
+                navigateToInAppBrowser = { url ->
+                    navHostController.navigate(Screen.WebViewScreen.createRoute(url))
+                }
+            )
         }
     }
 }
@@ -119,6 +123,8 @@ fun ProfileSection(
                 style = WalkieTypography.SubTitle
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
                 text = user.name,
                 style = WalkieTypography.Body2,
@@ -154,7 +160,9 @@ fun ProfileSection(
 }
 
 @Composable
-fun SettingsList() {
+fun SettingsList(
+    navigateToInAppBrowser: (url: String) -> Unit = {},
+) {
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
@@ -190,13 +198,15 @@ fun SettingsList() {
     MenuItem(
         text = R.string.license,
         icon = R.drawable.ic_info,
-        onClick = {
-        },
+        onClick = { },
     )
 
     MenuItem(
         text = R.string.terms_and_policy,
         icon = R.drawable.ic_book,
+        onClick = {
+            navigateToInAppBrowser("https://festive-recorder-88c.notion.site/140d4d2df2e2800ca1b6f35c7a1043fc?pvs=4")
+        }
     )
 
     val versionName = AppVersionUtil.getVersionName(context)
