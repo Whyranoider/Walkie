@@ -35,8 +35,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.whyranoid.presentation.R
 import com.whyranoid.presentation.reusable.MenuItem
 import com.whyranoid.presentation.screens.Screen
@@ -195,10 +197,15 @@ fun SettingsList(
         },
     )
 
+    OssLicensesMenuActivity.setActivityTitle(getString(context, R.string.open_source_license))
+    val ossLicensesIntent = Intent(context, OssLicensesMenuActivity::class.java)
+
     MenuItem(
         text = R.string.license,
         icon = R.drawable.ic_info,
-        onClick = { },
+        onClick = {
+            context.startActivity(ossLicensesIntent)
+        },
     )
 
     MenuItem(

@@ -13,6 +13,7 @@ android-material = "1.8.0"
 junit = "4.13.2"
 androidx-test-junit = "1.1.5"
 espresso-core = "3.5.1"
+play-services-oss-licenses = "17.1.0"
 
 [libraries]
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
@@ -34,6 +35,7 @@ hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-complier = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javax-inject" }
+play-services-oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "play-services-oss-licenses" }
 
 [bundles]
 navigation = ["androidx-navigation-fragment-ktx", "androidx-navigation-ui-ktx", "androidx-navigation-dynamic-features-fragment"]

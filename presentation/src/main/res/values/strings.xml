@@ -22,5 +22,6 @@
     <string name="customer_service_email_title">사용자 문의 사항</string>
     <string name="customer_service_email_content">문제가 발생한 화면을 함께 첨부해주시면 더욱 빠른 처리가 가능합니다. 저희 서비스를 이용해주셔서 감사합니다.</string>
     <string name="customer_service_email_chooser">이메일 앱을 선택해주세요</string>
+    <string name="open_source_license">오픈소스 라이센스</string>
 
 </resources>

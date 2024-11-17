@@ -57,6 +57,7 @@ dependencies {
     implementation(project(":domain"))
 
     implementation(libs.bundles.android.base)
+    implementation(libs.play.services.oss.licenses)
 
     val composeBom = platform("androidx.compose:compose-bom:2024.05.00")
     implementation(composeBom)
