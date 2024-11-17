@@ -119,7 +119,7 @@ fun ChallengeDetailContent(
             coroutineScope = coroutineScope,
             modalSheetState = modalSheetState,
             onNegativeButtonClicked = {
-                onNegativeButtonClicked(challenge.id)
+                onNegativeButtonClicked(challenge.id.toLong())
             }
         ) {
             Scaffold() { paddingValues ->
@@ -132,7 +132,7 @@ fun ChallengeDetailContent(
                         .padding(paddingValues)
                         .verticalScroll(scrollState),
                 ) {
-                    // TODO: Async Image
+
                     AsyncImage(
                         model = challenge.imageUrl,
                         contentDescription = null,
@@ -147,7 +147,7 @@ fun ChallengeDetailContent(
                     ) {
 
                         Text(
-                            text = challenge.title,
+                            text = challenge.name,
                             fontSize = 20.sp,
                             fontWeight = FontWeight(700),
                         )
@@ -169,7 +169,7 @@ fun ChallengeDetailContent(
                                     vertical = 12.dp
                                 ),
                                 color = Color(0xFF989898),
-                                text = challenge.contents,
+                                text = challenge.content,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight(500),
                             )
@@ -230,7 +230,7 @@ fun ChallengeDetailContent(
                         Spacer(modifier = Modifier.height(10.dp))
 
                         Text(
-                            text = "${challenge.participantCount}명",
+                            text = "${challenge.walkies.count()}명",
                             fontSize = 12.sp,
                             fontWeight = FontWeight(500),
                         )
@@ -238,7 +238,7 @@ fun ChallengeDetailContent(
                         Spacer(modifier = Modifier.height(10.dp))
 
                         LazyRow {
-                            challenge.participants.forEach { participant ->
+                            challenge.walkies.forEach { participant ->
                                 item {
                                     UserIcon(user = participant)
                                     Spacer(modifier = Modifier.width(8.dp))

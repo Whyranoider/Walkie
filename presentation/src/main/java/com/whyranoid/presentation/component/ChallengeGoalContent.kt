@@ -55,7 +55,9 @@ fun ChallengeGoalContent(
 
         val progressBarColor = challengeColor.progressBarColor
 
-        val progress = if (challenge.process == null) 0f else requireNotNull(challenge.process) / 100f
+        val progress =
+            if (challenge.progress == null) 0f else requireNotNull(challenge.progress) / 100f
+
 
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -114,7 +116,7 @@ fun ChallengeGoalContent(
                 dstSize = bitMapIconSize,
                 dstOffset = IntOffset(
                     (barEnd - bitMapIconSize.width / 2).toInt(),
-                    - bitMapIconSize.height / 2,
+                    -bitMapIconSize.height / 2,
                 ),
                 colorFilter = ColorFilter.tint(progressBarColor)
             )
@@ -158,9 +160,11 @@ fun ChallengeGoalContent(
                         modifier = Modifier.weight(1f),
                         // TODO : limit에 적합한 값 필요(새로운 필드)
                         // TODO : time 포멧 변경
-                        goal = "${challenge.startTime}~${challenge.endTime}시 사이", limit = challenge.period.toString()
+                        goal = "${challenge.startTime}~${challenge.endTime}시 사이",
+                        limit = challenge.period.toString()
                     )
                 }
+
                 ChallengeType.CALORIE -> {
                     ChallengeGoalItem(
                         modifier = Modifier.weight(1f),
@@ -168,6 +172,7 @@ fun ChallengeGoalContent(
                         goal = "기간", limit = challenge.period.toString()
                     )
                 }
+
                 ChallengeType.DISTANCE -> {
                     ChallengeGoalItem(
                         modifier = Modifier.weight(1f),
@@ -186,7 +191,8 @@ fun ChallengeGoalContent(
 
             ChallengeGoalItem(
                 modifier = Modifier.weight(1f),
-                goal = "칼로리", limit = if (challenge.challengeType == ChallengeType.CALORIE) "${challenge.calorie}kcal" else "0kcal"
+                goal = "칼로리",
+                limit = if (challenge.challengeType == ChallengeType.CALORIE) "${challenge.calorie}kcal" else "0kcal"
             )
 
         }

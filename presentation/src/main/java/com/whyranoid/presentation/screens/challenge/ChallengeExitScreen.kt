@@ -119,13 +119,13 @@ fun ChallengeExitContent(
 
                 Spacer(modifier = Modifier.height(17.dp))
                 Text(
-                    text = challenge.title,
+                    text = challenge.name,
                     style = WalkieTypography.Title.copy(Color(0xFF929292))
                 )
 
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "진행률 ${challenge.process}%",
+                    text = "진행률 ${challenge.progress}%",
                     style = WalkieTypography.Title.copy(
                         color = Color(0xFF929292),
                         fontSize = 15.sp
@@ -137,7 +137,6 @@ fun ChallengeExitContent(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
 
-                val context = LocalContext.current
                 Box(
                     Modifier.weight(1f)
                 ) {
