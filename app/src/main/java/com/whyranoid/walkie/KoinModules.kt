@@ -120,7 +120,7 @@ import java.util.concurrent.TimeUnit
 val viewModelModule =
     module {
         viewModel { ChallengeMainViewModel(get(), get(), get(), get(), get()) }
-        viewModel { ChallengeDetailViewModel(get(), get()) }
+        viewModel { ChallengeDetailViewModel(get(), get(), get()) }
         viewModel { ChallengeExitViewModel(get(), get()) }
         viewModel {
             UserPageViewModel(
