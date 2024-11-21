@@ -36,4 +36,6 @@ interface AccountRepository {
     suspend fun changeMyInfo(walkieId: Long, nickName: String, profileUrl: String?): Result<Boolean>
 
     suspend fun getUserInfo(walkieId: Long): Result<UserInfo>
+
+    suspend fun leave(walkieId: Long): Result<Unit>
 }

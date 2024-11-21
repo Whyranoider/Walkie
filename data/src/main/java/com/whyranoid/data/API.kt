@@ -7,6 +7,8 @@ object API {
 
     const val SIGN_UP = "api/walkies/signup"
 
+    const val LEAVE = "api/walkies/leave"
+
     const val FOLLOW = "api/follow/follow"
 
     const val WALKING_FOLLOWING = "api/follow/{uid}/walking-followings"

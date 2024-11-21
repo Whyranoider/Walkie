@@ -1,5 +1,6 @@
 package com.whyranoid.presentation.screens.setting
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.annotation.StringRes
@@ -41,6 +42,7 @@ import coil.compose.AsyncImage
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.whyranoid.presentation.R
 import com.whyranoid.presentation.reusable.MenuItem
+import com.whyranoid.presentation.reusable.SingleToast
 import com.whyranoid.presentation.screens.Screen
 import com.whyranoid.presentation.screens.mypage.editprofile.UserInfoUiState
 import com.whyranoid.presentation.theme.SystemColor
@@ -55,6 +57,7 @@ fun SettingsScreen(navHostController: NavHostController) {
     val user = viewModel.userInfoUiState.collectAsState()
 
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
 
     user.value?.let {
         Column(
@@ -68,6 +71,16 @@ fun SettingsScreen(navHostController: NavHostController) {
             SettingsList(
                 navigateToInAppBrowser = { url ->
                     navHostController.navigate(Screen.WebViewScreen.createRoute(url))
+                },
+                onClickSignOut = {
+                    viewModel.signOutFromGoogle(context) {
+                        SingleToast.show(context, "로그아웃 되었습니다.")
+                    }
+                },
+                onClickLeave = {
+                    viewModel.revokeGoogleAccess(context) {
+                        SingleToast.show(context, "계정 탈퇴가 완료되었습니다.")
+                    }
                 }
             )
         }
@@ -164,6 +177,8 @@ fun ProfileSection(
 @Composable
 fun SettingsList(
     navigateToInAppBrowser: (url: String) -> Unit = {},
+    onClickSignOut: () -> Unit = {},
+    onClickLeave: () -> Unit = {},
 ) {
     Spacer(
         modifier = Modifier
@@ -234,7 +249,9 @@ fun SettingsList(
    MenuItem(
        text = R.string.logout,
        icon = null
-   )
+   ) {
+       onClickSignOut()
+   }
 
     Spacer(
         modifier = Modifier
@@ -246,7 +263,9 @@ fun SettingsList(
     MenuItem(
         text = R.string.delete_account,
         icon = null
-    )
+    ) {
+        onClickLeave()
+    }
 }
 
 @Composable

@@ -87,4 +87,10 @@ class AccountDataSourceImpl(private val accountService: AccountService) : Accoun
             accountService.getMyInfo(walkieId).getResult { it.toUserInfo() }
         }
     }
+
+    override suspend fun leave(walkieId: Long): Result<Unit> {
+        return kotlin.runCatching {
+            accountService.leave(walkieId).getResult{ }
+        }
+    }
 }

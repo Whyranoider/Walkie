@@ -2,6 +2,7 @@ package com.whyranoid.data.datasource.account
 
 import com.whyranoid.data.API
 import com.whyranoid.data.model.account.ChangeMyInfoResponse
+import com.whyranoid.data.model.account.LeaveResponse
 import com.whyranoid.data.model.account.LoginDataResponse
 import com.whyranoid.data.model.account.NickCheckResponse
 import com.whyranoid.data.model.account.SignUpRequest
@@ -10,6 +11,7 @@ import com.whyranoid.data.model.account.UserInfoResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -42,4 +44,9 @@ interface AccountService {
     suspend fun getMyInfo(
         @Query("walkieId") id: Long
     ): Response<UserInfoResponse>
+
+    @DELETE(API.LEAVE)
+    suspend fun leave(
+        @Query("walkieId") id: Long
+    ): Response<LeaveResponse>
 }
