@@ -1,5 +1,8 @@
 package com.whyranoid.presentation.screens.setting
 
+import android.content.Intent
+import android.net.Uri
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,32 +20,39 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.whyranoid.domain.model.user.User
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.whyranoid.presentation.R
+import com.whyranoid.presentation.reusable.MenuItem
 import com.whyranoid.presentation.screens.Screen
+import com.whyranoid.presentation.screens.mypage.editprofile.UserInfoUiState
+import com.whyranoid.presentation.theme.SystemColor
 import com.whyranoid.presentation.theme.WalkieColor
 import com.whyranoid.presentation.theme.WalkieTypography
+import com.whyranoid.presentation.util.AppVersionUtil
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreen(navHostController: NavHostController) {
     val viewModel = koinViewModel<SettingViewModel>()
-    val user = viewModel.user.collectAsState()
+    val user = viewModel.userInfoUiState.collectAsState()
 
     val scrollState = rememberScrollState()
 
@@ -55,7 +65,11 @@ fun SettingsScreen(navHostController: NavHostController) {
             TopAppBar { navHostController.popBackStack() }
             ProfileSection(it) {
                 navHostController.navigate(Screen.EditProfileScreen.route) }
-            SettingsList()
+            SettingsList(
+                navigateToInAppBrowser = { url ->
+                    navHostController.navigate(Screen.WebViewScreen.createRoute(url))
+                }
+            )
         }
     }
 }
@@ -86,7 +100,7 @@ fun TopAppBar(
 
 @Composable
 fun ProfileSection(
-    user: User,
+    user: UserInfoUiState,
     onProfileEditClicked: () -> Unit,
 ) {
     Row(
@@ -97,7 +111,7 @@ fun ProfileSection(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            model = user.imageUrl,
+            model = user.profileUrl ?: R.drawable.ic_default_profile,
             contentDescription = "Profile Image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -106,10 +120,21 @@ fun ProfileSection(
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {
-            Text(text = user.nickname, style = MaterialTheme.typography.subtitle1)
-            Text(text = user.name, style = MaterialTheme.typography.body2)
+            Text(
+                text = user.nickname,
+                style = WalkieTypography.SubTitle
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = user.name,
+                style = WalkieTypography.Body2,
+                color = SystemColor.Negative
+            )
         }
     }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -124,7 +149,7 @@ fun ProfileSection(
             .padding(12.dp)
     ) {
         Text(
-            text = "프로필 편집",
+            text = stringResource(id = R.string.edit_profile),
             modifier = Modifier
                 .fillMaxWidth(),
             textAlign = TextAlign.Center,
@@ -132,39 +157,84 @@ fun ProfileSection(
         )
         Spacer(modifier = Modifier.height(16.dp))
     }
+
+    Spacer(modifier = Modifier.height(12.dp))
 }
 
 @Composable
-fun SettingsList() {
-    val settingsGroups = listOf(
-        "내 정보" to listOf("내 계정", "내 신체 정보"),
-        "소셜" to listOf("프로필 공개 설정", "친구 관리"),
-        "앱 설정" to listOf("러닝 설정", "알림 설정", "푸시 설정"),
-        "앱 관리" to listOf("고객센터", "라이센스", "이용약관 및 운영정책", "버전 정보")
+fun SettingsList(
+    navigateToInAppBrowser: (url: String) -> Unit = {},
+) {
+    Spacer(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(8.dp)
+            .background(WalkieColor.GrayBackground)
     )
 
+    GroupTitle(title = R.string.manage_app)
 
-    settingsGroups.forEach { (groupTitle, items) ->
-        Spacer(modifier = Modifier.height(8.dp))
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(8.dp)
-                .background(WalkieColor.GrayBackground)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = groupTitle,
-            style = WalkieTypography.Body1_SemiBold,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .padding(horizontal = 20.dp)
-        )
-        items.forEach { item ->
-            SettingsItem(text = item)
+    val context = LocalContext.current
+    val emailAddress = "lets.walkie@gmail.com"
+    val emailTitle = stringResource(id = R.string.customer_service_email_title)
+    val emailContent = stringResource(id = R.string.customer_service_email_content)
+    val emailAppChooserTitle = stringResource(id = R.string.customer_service_email_chooser)
+
+    val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse("mailto:")
+        putExtra(Intent.EXTRA_EMAIL, arrayOf(emailAddress))
+        putExtra(Intent.EXTRA_SUBJECT, emailTitle)
+        putExtra(Intent.EXTRA_TEXT, emailContent)
+    }
+
+    MenuItem(
+        text = R.string.customer_service,
+        icon = R.drawable.ic_call,
+        onClick = {
+            context.startActivity(
+                Intent.createChooser(emailIntent, emailAppChooserTitle)
+            )
+        },
+    )
+
+    OssLicensesMenuActivity.setActivityTitle(getString(context, R.string.open_source_license))
+    val ossLicensesIntent = Intent(context, OssLicensesMenuActivity::class.java)
+
+    MenuItem(
+        text = R.string.license,
+        icon = R.drawable.ic_info,
+        onClick = {
+            context.startActivity(ossLicensesIntent)
+        },
+    )
+
+    MenuItem(
+        text = R.string.terms_and_policy,
+        icon = R.drawable.ic_book,
+        onClick = {
+            navigateToInAppBrowser("https://festive-recorder-88c.notion.site/140d4d2df2e2800ca1b6f35c7a1043fc?pvs=4")
         }
-    }
+    )
 
+    val versionName = AppVersionUtil.getVersionName(context)
+
+    MenuItem(
+        text = R.string.version_info,
+        subInfo = versionName.orEmpty(),
+        icon = R.drawable.ic_mobile,
+    )
+
+    Spacer(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(8.dp)
+            .background(WalkieColor.GrayBackground)
+    )
+
+   MenuItem(
+       text = R.string.logout,
+       icon = null
+   )
 
     Spacer(
         modifier = Modifier
@@ -173,54 +243,21 @@ fun SettingsList() {
             .background(WalkieColor.GrayBackground)
     )
 
-    Text(
-        text = "로그아웃",
-        style = MaterialTheme.typography.button,
-        modifier = Modifier
-            .padding(vertical = 16.dp)
-            .padding(horizontal = 20.dp),
-        textAlign = TextAlign.Center
-    )
-
-
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(8.dp)
-            .background(WalkieColor.GrayBackground)
-    )
-
-    Text(
-        text = "계정 삭제",
-        style = MaterialTheme.typography.button,
-        modifier = Modifier
-            .padding(vertical = 16.dp)
-            .padding(horizontal = 20.dp),
-        textAlign = TextAlign.Center
-    )
-
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(8.dp)
-            .background(WalkieColor.GrayBackground)
+    MenuItem(
+        text = R.string.delete_account,
+        icon = null
     )
 }
 
 @Composable
-fun SettingsItem(text: String) {
-    Row(
+private fun GroupTitle(
+    @StringRes title: Int
+) {
+    Text(
+        text = stringResource(id = title),
+        style = WalkieTypography.Body1_SemiBold,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .padding(horizontal = 20.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(text = text, style = MaterialTheme.typography.body1)
-        Spacer(modifier = Modifier.weight(1f))
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowRight,
-            contentDescription = "Navigate"
-        )
-    }
+            .padding(start = 16.dp, top = 12.dp, bottom = 8.dp)
+    )
 }

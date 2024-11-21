@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.firebase.crashlytics")
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
@@ -53,6 +54,7 @@ dependencies {
     implementation(project(":data"))
 
     implementation(libs.bundles.android.base)
+    implementation(libs.play.services.oss.licenses)
 
     val composeBom = platform("androidx.compose:compose-bom:2024.05.00")
     implementation(composeBom)

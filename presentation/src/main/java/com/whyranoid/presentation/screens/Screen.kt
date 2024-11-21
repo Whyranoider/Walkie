@@ -6,6 +6,8 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.whyranoid.presentation.R
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 sealed class Screen(
     val route: String,
@@ -143,6 +145,21 @@ sealed class Screen(
         fun route(uid: Long, postId: Long) = "userPostsScreen/$uid/$postId"
     }
 
+    object WebViewScreen : Screen(
+        route = "webViewScreen/{$URL}",
+        arguments = listOf(
+            navArgument(URL) {
+                type = NavType.StringType
+                nullable = true
+            }
+        ),
+    ) {
+        fun createRoute(url: String): String {
+            val encodedUrl = URLEncoder.encode(url, StandardCharsets.UTF_8.toString())
+            return route.replace("{$URL}", encodedUrl)
+        }
+    }
+
     companion object {
         val bottomNavigationItems = listOf(Running, Community, ChallengeMainScreen, MyPage)
 
@@ -151,5 +168,6 @@ sealed class Screen(
         const val IS_FOLLOWING_ARGUMENT = "isFollowing"
         const val PAGE_NO = "pageNo"
         const val POST_ID = "postId"
+        const val URL = "url"
     }
 }
