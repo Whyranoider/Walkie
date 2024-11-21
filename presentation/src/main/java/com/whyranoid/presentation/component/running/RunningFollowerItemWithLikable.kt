@@ -12,6 +12,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +38,8 @@ fun RunningFollowerItemWithLikable(
     isDisplayName: Boolean = false,
     isLiked: Boolean = false,
 ) {
+    var isLikedStatus by remember { mutableStateOf(isLiked) }
+
     Box(
         modifier = Modifier.wrapContentSize(),
         contentAlignment = Alignment.TopEnd,
@@ -50,6 +56,7 @@ fun RunningFollowerItemWithLikable(
                 .clip(CircleShape)
                 .clickable {
                     onClick.invoke(user.uid)
+                    isLikedStatus = isLikedStatus.not()
                 }
                 .size(48.dp)
                 .padding(4.dp)
@@ -62,8 +69,10 @@ fun RunningFollowerItemWithLikable(
         ) {
             Icon(
                 Icons.Default.Favorite,
-                tint = if (isLiked) WalkieColor.Primary else WalkieColor.GrayBorder,
-                modifier = Modifier.size(20.dp).align(Alignment.Center),
+                tint = if (isLikedStatus) WalkieColor.Primary else WalkieColor.GrayBorder,
+                modifier = Modifier
+                    .size(20.dp)
+                    .align(Alignment.Center),
                 contentDescription = "like image",
             )
         }
