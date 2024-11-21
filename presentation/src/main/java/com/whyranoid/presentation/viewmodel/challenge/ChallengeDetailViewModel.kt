@@ -2,6 +2,8 @@ package com.whyranoid.presentation.viewmodel.challenge
 
 import androidx.lifecycle.ViewModel
 import com.whyranoid.domain.model.challenge.Challenge
+import com.whyranoid.domain.usecase.ChangeChallengeStatusUseCase
+import com.whyranoid.domain.usecase.CompleteChallengeUseCase
 import com.whyranoid.domain.usecase.GetChallengeDetailUseCase
 import com.whyranoid.domain.usecase.StartChallengeUseCase
 import com.whyranoid.presentation.model.UiState
@@ -15,6 +17,9 @@ sealed class ChallengeDetailSideEffect {
 
     object StartChallengeSuccess : ChallengeDetailSideEffect()
     object StartChallengeFailure : ChallengeDetailSideEffect()
+
+    object ChangeChallengeStatusSuccess : ChallengeDetailSideEffect()
+    object ChangeChallengeStatusFailure : ChallengeDetailSideEffect()
 }
 
 data class ChallengeDetailState(
@@ -23,7 +28,8 @@ data class ChallengeDetailState(
 
 class ChallengeDetailViewModel(
     private val getChallengeDetailUseCase: GetChallengeDetailUseCase,
-    private val startChallengeUseCase: StartChallengeUseCase
+    private val startChallengeUseCase: StartChallengeUseCase,
+    private val changeChallengeStatusUseCase: CompleteChallengeUseCase
 ) : ViewModel(), ContainerHost<ChallengeDetailState, ChallengeDetailSideEffect> {
 
     override val container =
@@ -48,6 +54,14 @@ class ChallengeDetailViewModel(
             postSideEffect(ChallengeDetailSideEffect.StartChallengeFailure)
         }
 
+    }
+
+    fun changeChallengeStatus(challengeId: Int) = intent {
+        changeChallengeStatusUseCase(challengeId).onSuccess {
+            postSideEffect(ChallengeDetailSideEffect.ChangeChallengeStatusSuccess)
+        }.onFailure {
+            postSideEffect(ChallengeDetailSideEffect.ChangeChallengeStatusFailure)
+        }
     }
 }
 

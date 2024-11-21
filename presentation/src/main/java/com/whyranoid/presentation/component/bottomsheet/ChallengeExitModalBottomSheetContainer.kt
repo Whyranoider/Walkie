@@ -88,7 +88,7 @@ fun ChallengeExitModalBottomSheetContainer(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "진행률 ${challenge.process}%",
+                    text = "진행률 ${challenge.progress}%",
                     style = WalkieTypography.Body2.copy(
                         color = SystemColor.Negative,
                         fontWeight = FontWeight(700)

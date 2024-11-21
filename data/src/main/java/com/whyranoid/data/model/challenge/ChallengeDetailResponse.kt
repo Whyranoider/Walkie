@@ -1,29 +1,38 @@
 package com.whyranoid.data.model.challenge
 
+import com.whyranoid.domain.model.challenge.Challenge
 import com.whyranoid.domain.model.challenge.ChallengeType
+import com.whyranoid.domain.util.EMPTY
 
 data class ChallengeDetailResponse(
     val challenge: ChallengeFromServer,
     val walkies: List<Walkie>
 ) {
-    fun toChallenge(): com.whyranoid.domain.model.challenge.Challenge {
-        val participants = walkies.map { it.toUser() }
-        return com.whyranoid.domain.model.challenge.Challenge(
-            badge = challenge.badge.toBadge(),
-            calorie = challenge.calorie,
-            challengeType = ChallengeType.getChallengeTypeByString(challenge.category),
-            id = challenge.challengeId.toLong(),
-            contents = challenge.content,
-            imageUrl = challenge.img,
-            title = challenge.name,
-            process = challenge.progress,
-            participants = participants,
-            participantCount = participants.size,
-            period = challenge.period,
-            distance = challenge.distance,
-            endTime = challenge.endTime,
-            startTime = challenge.startTime,
-            status = challenge.status
+    fun toChallenge(): Challenge {
+        val challenge = Challenge(
+            challenge.accCalories,
+            challenge.accCount,
+            challenge.accDistance,
+            challenge.accTime,
+            challenge.badge.toBadge(),
+            challenge.calorie,
+            ChallengeType.getChallengeTypeByString(challenge.category ?: String.EMPTY),
+            challenge.challengeEdate,
+            challenge.challengeId,
+            challenge.challengeSdate,
+            challenge.content,
+            challenge.distance,
+            challenge.endTime,
+            challenge.goalCount,
+            challenge.img,
+            challenge.name,
+            challenge.period,
+            challenge.progress,
+            challenge.startTime,
+            challenge.status,
+            challenge.timeLimit,
+            walkies.map { it.toUser() }
         )
+        return challenge
     }
 }

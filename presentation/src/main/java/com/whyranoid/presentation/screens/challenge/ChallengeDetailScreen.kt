@@ -1,6 +1,5 @@
 package com.whyranoid.presentation.screens.challenge
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -32,14 +31,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.whyranoid.presentation.R
 import com.whyranoid.presentation.component.ChallengeGoalContent
 import com.whyranoid.presentation.component.UserIcon
 import com.whyranoid.presentation.component.bottomsheet.ChallengeExitModalBottomSheetContainer
@@ -82,9 +79,17 @@ fun ChallengeDetailScreen(
             ChallengeDetailSideEffect.StartChallengeFailure -> {
                 SingleToast.show(context, "챌린지를 시작할 수 없습니다.")
             }
+
+            ChallengeDetailSideEffect.ChangeChallengeStatusSuccess -> {
+                SingleToast.show(context, "챌린지를 성공적으로 완료하였습니다.")
+                navController.popBackStack()
+            }
+
+            ChallengeDetailSideEffect.ChangeChallengeStatusFailure -> {
+                SingleToast.show(context, "챌린지 완료에 실패하였습니다.")
+            }
         }
     }
-
     ChallengeDetailContent(state, isChallenging,
         onNegativeButtonClicked = {
             navController.navigate(
@@ -93,7 +98,11 @@ fun ChallengeDetailScreen(
         },
         onStartChallengeButtonClicked = {
             viewModel.startChallenge(it)
-        })
+        },
+        onChallengeCompleteButtonClicked = {
+            viewModel.changeChallengeStatus(it)
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -102,7 +111,8 @@ fun ChallengeDetailContent(
     state: ChallengeDetailState,
     isChallenging: Boolean,
     onNegativeButtonClicked: (Long) -> Unit = {},
-    onStartChallengeButtonClicked: (Int) -> Unit = { }
+    onStartChallengeButtonClicked: (Int) -> Unit = { },
+    onChallengeCompleteButtonClicked: (Int) -> Unit = { }
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -119,7 +129,7 @@ fun ChallengeDetailContent(
             coroutineScope = coroutineScope,
             modalSheetState = modalSheetState,
             onNegativeButtonClicked = {
-                onNegativeButtonClicked(challenge.id)
+                onNegativeButtonClicked(challenge.id.toLong())
             }
         ) {
             Scaffold() { paddingValues ->
@@ -132,7 +142,7 @@ fun ChallengeDetailContent(
                         .padding(paddingValues)
                         .verticalScroll(scrollState),
                 ) {
-                    // TODO: Async Image
+
                     AsyncImage(
                         model = challenge.imageUrl,
                         contentDescription = null,
@@ -147,7 +157,7 @@ fun ChallengeDetailContent(
                     ) {
 
                         Text(
-                            text = challenge.title,
+                            text = challenge.name,
                             fontSize = 20.sp,
                             fontWeight = FontWeight(700),
                         )
@@ -169,7 +179,7 @@ fun ChallengeDetailContent(
                                     vertical = 12.dp
                                 ),
                                 color = Color(0xFF989898),
-                                text = challenge.contents,
+                                text = challenge.content,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight(500),
                             )
@@ -230,7 +240,7 @@ fun ChallengeDetailContent(
                         Spacer(modifier = Modifier.height(10.dp))
 
                         Text(
-                            text = "${challenge.participantCount}명",
+                            text = "${challenge.walkies.count()}명",
                             fontSize = 12.sp,
                             fontWeight = FontWeight(500),
                         )
@@ -238,7 +248,7 @@ fun ChallengeDetailContent(
                         Spacer(modifier = Modifier.height(10.dp))
 
                         LazyRow {
-                            challenge.participants.forEach { participant ->
+                            challenge.walkies.forEach { participant ->
                                 item {
                                     UserIcon(user = participant)
                                     Spacer(modifier = Modifier.width(8.dp))
@@ -264,6 +274,13 @@ fun ChallengeDetailContent(
                                     textDecoration = TextDecoration.Underline
                                 )
                                 Spacer(modifier = Modifier.height(40.dp))
+
+
+                                // Todo: remove
+                                WalkiePositiveButton(text = "완료하기") {
+                                    onChallengeCompleteButtonClicked(challenge.id)
+                                }
+
                             }
                         } else {
                             Spacer(modifier = Modifier.height(28.dp))
