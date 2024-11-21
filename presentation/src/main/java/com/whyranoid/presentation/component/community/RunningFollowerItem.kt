@@ -44,7 +44,7 @@ fun RunningFollowerItem(
             contentAlignment = Alignment.Center,
         ) {
             AsyncImage(
-                model = "https://picsum.photos/250/250 ",
+                model = user.imageUrl,
                 contentDescription = "달리고 있는 친구의 프로필 이미지",
                 modifier = Modifier
                     .size(65.dp)
@@ -57,7 +57,7 @@ fun RunningFollowerItem(
         if (isDisplayName) {
             Spacer(modifier = Modifier.size(6.dp))
 
-            Text(text = "내 기록")
+            Text(text = "내 기록") // 내꺼면 내기록 아니면 사람 이름
         }
     }
 }

@@ -24,10 +24,12 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,6 +48,10 @@ import org.orbitmvi.orbit.compose.collectAsState
 fun CommunityScreen(navController: NavController) {
     val viewModel = koinViewModel<CommunityScreenViewModel>()
     val state by viewModel.collectAsState()
+
+    LaunchedEffect(LocalLifecycleOwner.current) {
+        viewModel.getRunningFollowingsState()
+    }
 
     Scaffold(
         topBar = {
@@ -113,8 +119,24 @@ fun CommunityScreen(navController: NavController) {
             modifier = Modifier.padding(it)
         ) {
             LazyRow {
-                repeat(10) {
-                    item { RunningFollowerItemWithLikable(isDisplayName = true) }
+                state.runningFollowerState.getDataOrNull()?.let { (running, notRunning) ->
+                    items(running.size) {
+                        RunningFollowerItemWithLikable(
+                            user = running[it].user,
+                            onClickProfile = { user ->
+                                navController.navigate("userPage/${user.uid}/${user.nickname}/${true}")
+                            },
+                            onClick = viewModel::sendLike,
+                            circleBorderColor = WalkieColor.Primary,
+                            isLiked = running[it].isLiked,
+                        )
+                    }
+                    items(notRunning.size) {
+                        RunningFollowerItemWithLikable(
+                            user = notRunning[it],
+                            circleBorderColor = WalkieColor.GrayBorder,
+                        )
+                    }
                 }
             }
 

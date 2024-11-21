@@ -11,6 +11,6 @@ class GetFollowingsPostsUseCase(
 ) {
     suspend operator fun invoke(isEveryPost: Boolean): Result<List<Post>> {
         val myUid = requireNotNull(accountRepository.walkieId.first())
-        return postRepository.getMyFollowingsPost(myUid)
+        return if (isEveryPost) postRepository.getEveryPost(myUid) else postRepository.getMyFollowingsPost(myUid)
     }
 }

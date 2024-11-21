@@ -144,7 +144,7 @@ val viewModelModule =
         viewModel { AddPostViewModel(get()) }
         viewModel { SearchFriendViewModel(get(), get(), get()) }
         viewModel { DialogViewModel(get(), get(), get(), get(), get(), get()) }
-        viewModel { CommunityScreenViewModel(get(), get(), get()) }
+        viewModel { CommunityScreenViewModel(get(), get(), get(), get(), get()) }
         viewModel { FollowingViewModel(get(), get(), get(), get(), get(), get()) }
         viewModel { SettingViewModel(get(), get()) }
         viewModel { TotalBadgeViewModel(get(), get()) }

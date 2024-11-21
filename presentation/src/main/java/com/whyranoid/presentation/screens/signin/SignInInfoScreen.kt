@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,7 +49,10 @@ fun SignInInfoScreen(onSuccess: () -> Unit) {
 
     Surface(modifier = Modifier.background(Color.White)) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(20.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .systemBarsPadding()
+                .padding(20.dp),
             horizontalAlignment = Alignment.Start,
         ) {
             Text("알려주세요.", style = WalkieTypography.Title, modifier = Modifier.padding(top = 68.dp))
@@ -59,7 +63,10 @@ fun SignInInfoScreen(onSuccess: () -> Unit) {
                 modifier = Modifier.padding(top = 40.dp),
             )
             Row(
-                modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(top = 10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(top = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 OutlinedButton(
@@ -69,7 +76,9 @@ fun SignInInfoScreen(onSuccess: () -> Unit) {
                         color = if (infoState.sex == Sex.MALE) WalkieColor.Primary else WalkieColor.GrayDefault,
                     ),
                     onClick = { viewModel.setInfoState(infoState.copy(sex = Sex.MALE)) },
-                    modifier = Modifier.weight(1f).height(40.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(40.dp),
                     colors = buttonColors(
                         backgroundColor = if (infoState.sex == Sex.MALE) {
                             WalkieColor.Primary.copy(
@@ -94,7 +103,9 @@ fun SignInInfoScreen(onSuccess: () -> Unit) {
                         color = if (infoState.sex == Sex.FEMALE) WalkieColor.Primary else WalkieColor.GrayDefault,
                     ),
                     onClick = { viewModel.setInfoState(infoState.copy(sex = Sex.FEMALE)) },
-                    modifier = Modifier.weight(1f).height(40.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(40.dp),
                     colors = buttonColors(
                         backgroundColor = if (infoState.sex == Sex.FEMALE) {
                             WalkieColor.Primary.copy(
@@ -118,11 +129,15 @@ fun SignInInfoScreen(onSuccess: () -> Unit) {
                 modifier = Modifier.padding(top = 20.dp),
             )
             BasicTextField(
-                modifier = Modifier.padding(top = 10.dp).fillMaxWidth().height(40.dp).border(
-                    width = 1.dp,
-                    color = WalkieColor.GrayDefault,
-                    shape = RoundedCornerShape(12.dp),
-                ),
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .border(
+                        width = 1.dp,
+                        color = WalkieColor.GrayDefault,
+                        shape = RoundedCornerShape(12.dp),
+                    ),
                 value = infoState.height?.let { it.toString() } ?: "",
                 onValueChange = { text ->
                     text.toIntOrNull()?.let { height ->
@@ -147,11 +162,15 @@ fun SignInInfoScreen(onSuccess: () -> Unit) {
                 modifier = Modifier.padding(top = 20.dp),
             )
             BasicTextField(
-                modifier = Modifier.padding(top = 10.dp).fillMaxWidth().height(40.dp).border(
-                    width = 1.dp,
-                    color = WalkieColor.GrayDefault,
-                    shape = RoundedCornerShape(12.dp),
-                ),
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .border(
+                        width = 1.dp,
+                        color = WalkieColor.GrayDefault,
+                        shape = RoundedCornerShape(12.dp),
+                    ),
                 value = infoState.weight?.let { it.toString() } ?: "",
                 onValueChange = { text ->
                     text.toIntOrNull()?.let { weight ->
@@ -176,7 +195,9 @@ fun SignInInfoScreen(onSuccess: () -> Unit) {
             val enable =
                 infoState.sex != null && infoState.height != null && infoState.weight != null
             Button(
-                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
                 onClick = {
                     onSuccess()
                 },

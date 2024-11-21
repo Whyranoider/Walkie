@@ -38,7 +38,14 @@ class AccountRepositoryImpl(
         agreeSubscription: Boolean,
     ): Result<Long> {
         return kotlin.runCatching {
-            accountDataSource.signUp(userName, nickName, profileUrl, authId, agreeGps, agreeSubscription)
+            accountDataSource.signUp(
+                userName,
+                nickName,
+                profileUrl,
+                authId,
+                agreeGps,
+                agreeSubscription
+            )
                 .onSuccess { uid ->
                     accountDataStore.updateUId(uid)
                     accountDataStore.updateAuthId(authId)
@@ -106,5 +113,11 @@ class AccountRepositoryImpl(
 
     override suspend fun getUserInfo(walkieId: Long): Result<UserInfo> {
         return accountDataSource.getUserInfo(walkieId)
+    }
+
+    override suspend fun leave(walkieId: Long): Result<Unit> {
+        return kotlin.runCatching {
+            accountDataSource.leave(walkieId)
+        }
     }
 }
