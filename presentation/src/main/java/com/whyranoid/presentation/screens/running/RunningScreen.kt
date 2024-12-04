@@ -15,8 +15,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,15 +42,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -91,7 +93,6 @@ import com.whyranoid.presentation.viewmodel.RunningViewModel.Companion.MAP_MAX_Z
 import com.whyranoid.presentation.viewmodel.RunningViewModel.Companion.MAP_MIN_ZOOM
 import com.whyranoid.runningdata.model.RunningFinishData
 import com.whyranoid.runningdata.model.RunningState
-import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 
@@ -665,13 +666,15 @@ fun RunningInfoScreen(
                     style = WalkieTypography.Body2,
                 )
                 Text(
-                    text = state.runningResultInfoState.getDataOrNull()?.steps?.let { it.toString() }
-                        ?: state.runningInfoState.getDataOrNull()?.steps?.let { it.toString() }
+                    text = state.runningResultInfoState.getDataOrNull()?.steps?.toString()
+                        ?: state.runningInfoState.getDataOrNull()?.steps?.toString()
                         ?: "0",
                     style = WalkieTypography.Title,
                 )
             }
         }
+
+
     }
 }
 
@@ -688,7 +691,8 @@ fun RunningBottomButton(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxHeight()
+            .fillMaxWidth()
             .padding(bottom = 20.dp),
         contentAlignment = Alignment.BottomCenter,
     ) {
@@ -739,32 +743,56 @@ fun RunningBottomButton(
                     }
 
                     is RunningState.Paused -> {
-                        Row(
-                            Modifier
-                                .height(44.dp)
-                                .wrapContentWidth()
-                                .border(
-                                    width = 1.dp,
-                                    color = WalkieColor.GrayDefault,
-                                    shape = CircleShape,
-                                )
-                                .clip(CircleShape)
-                                .background(Color.White),
-                        ) {
-                            IconButton(modifier = modifier, onClick = { onResumeRunning() }) {
-                                Icon(
-                                    Icons.Default.PlayArrow,
-                                    contentDescription = "",
-                                    modifier = Modifier.size(20.dp),
+                        var buttonsWidth by remember { mutableFloatStateOf(0f) }
+
+                        Column {
+                            Row(
+                                Modifier
+                                    .height(32.dp)
+                                    .width(with(LocalDensity.current) { buttonsWidth.toDp() })
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(WalkieColor.GrayBlack),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = "잠시 런닝을 중단합니다",
+                                    style = WalkieTypography.Body2.copy(color = WalkieColor.PrimarySurface)
                                 )
                             }
-                            IconButton(modifier = modifier, onClick = { onFinishRunning() }) {
-                                Icon(
-                                    Icons.Default.Stop,
-                                    contentDescription = "",
-                                    tint = WalkieColor.Primary,
-                                    modifier = Modifier.size(20.dp),
-                                )
+
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            Row(
+                                Modifier
+                                    .height(44.dp)
+                                    .wrapContentWidth()
+                                    .border(
+                                        width = 1.dp,
+                                        color = WalkieColor.GrayDefault,
+                                        shape = CircleShape,
+                                    )
+                                    .clip(CircleShape)
+                                    .background(Color.White)
+                                    .onSizeChanged {
+                                        buttonsWidth = it.width.toFloat()
+                                    },
+                            ) {
+                                IconButton(modifier = modifier, onClick = { onResumeRunning() }) {
+                                    Icon(
+                                        Icons.Default.PlayArrow,
+                                        contentDescription = "",
+                                        modifier = Modifier.size(20.dp),
+                                    )
+                                }
+                                IconButton(modifier = modifier, onClick = { onFinishRunning() }) {
+                                    Icon(
+                                        Icons.Default.Stop,
+                                        contentDescription = "",
+                                        tint = WalkieColor.Primary,
+                                        modifier = Modifier.size(20.dp),
+                                    )
+                                }
                             }
                         }
                     }
