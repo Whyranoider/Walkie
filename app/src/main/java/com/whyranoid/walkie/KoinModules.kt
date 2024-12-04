@@ -171,7 +171,7 @@ val dataSourceModule =
         single<ChallengeDataSource> { ChallengeDataSourceImpl(get()) }
         single<PostDataSource> { PostDataSourceImpl(get()) }
         single<UserDataSource> { UserDataSourceImpl(get()) }
-        single<AccountDataSource> { AccountDataSourceImpl(get()) }
+        single<AccountDataSource> { AccountDataSourceImpl(get(),get()) }
         single<FollowDataSource> { FollowDataSourceImpl(get()) }
         single<RunningControlDataSource> { RunningControlDataSourceImpl(get()) }
         single<CommunityDataSource> { CommunityDataSourceImpl(get()) }
