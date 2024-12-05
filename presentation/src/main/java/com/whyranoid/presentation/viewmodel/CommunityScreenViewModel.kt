@@ -6,6 +6,8 @@ import com.whyranoid.domain.model.post.Post
 import com.whyranoid.domain.model.user.User
 import com.whyranoid.domain.usecase.GetFollowingsPostsUseCase
 import com.whyranoid.domain.usecase.GetMyFollowingUseCase
+import com.whyranoid.domain.usecase.GetMyUidUseCase
+import com.whyranoid.domain.usecase.GetUserUseCase
 import com.whyranoid.domain.usecase.LikePostUseCase
 import com.whyranoid.domain.usecase.running.GetRunningFollowerUseCase
 import com.whyranoid.domain.usecase.running.SendLikeUseCase
@@ -25,6 +27,7 @@ data class CommunityScreenState(
     val following: UiState<List<User>> = UiState.Idle,
     val isEveryPost: UiState<Boolean> = UiState.Success(true),
     val runningFollowerState: UiState<Pair<List<RunningFollower>, List<User>>> = UiState.Idle,
+    val myThumbnailState: UiState<User> = UiState.Idle,
 )
 
 class CommunityScreenViewModel(
@@ -33,6 +36,8 @@ class CommunityScreenViewModel(
     private val likePostUseCase: LikePostUseCase,
     private val sendLikeUseCase: SendLikeUseCase,
     private val getRunningFollowerUseCase: GetRunningFollowerUseCase,
+    private val getMyUidUseCase: GetMyUidUseCase,
+    private val getUserUseCase: GetUserUseCase,
 ) : ViewModel(), ContainerHost<CommunityScreenState, CommunityScreenSideEffect> {
 
     override val container =
@@ -47,6 +52,15 @@ class CommunityScreenViewModel(
                         following = UiState.Success(myFollowing),
                     )
                 }
+            }
+        }
+        intent {
+            val myUid = getMyUidUseCase().getOrThrow()
+            val user = getUserUseCase(myUid).getOrThrow()
+            reduce {
+                state.copy(
+                    myThumbnailState = UiState.Success(user)
+                )
             }
         }
         getPosts()
