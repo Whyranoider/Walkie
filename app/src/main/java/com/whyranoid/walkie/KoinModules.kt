@@ -50,6 +50,7 @@ import com.whyranoid.domain.repository.RunningHistoryRepository
 import com.whyranoid.domain.repository.RunningRepository
 import com.whyranoid.domain.repository.UserRepository
 import com.whyranoid.domain.usecase.ChangeChallengeStatusUseCase
+import com.whyranoid.domain.usecase.CompleteChallengeUseCase
 import com.whyranoid.domain.usecase.GetChallengeDetailUseCase
 import com.whyranoid.domain.usecase.GetChallengePreviewsByTypeUseCase
 import com.whyranoid.domain.usecase.GetChallengingPreviewsUseCase
@@ -182,6 +183,7 @@ val useCaseModule =
         single { GetNewChallengePreviewsUseCase(get()) }
         single { GetChallengingPreviewsUseCase(get()) }
         single { GetChallengeDetailUseCase(get(), get()) }
+        single { CompleteChallengeUseCase(get(), get())}
         single { GetChallengePreviewsByTypeUseCase(get(), get()) }
         single { GetTopRankChallengePreviewsUseCase(get()) }
         single { StartChallengeUseCase(get(), get()) }
