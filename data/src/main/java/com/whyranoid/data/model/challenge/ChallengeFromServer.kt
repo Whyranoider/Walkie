@@ -21,5 +21,6 @@ data class ChallengeFromServer(
     val progress: Int?,
     val startTime: String?,
     val status: String?,
-    val timeLimit: Int?
+    val timeLimit: Int?,
+    val time: Int?,
 )

@@ -24,5 +24,6 @@ data class Challenge(
     val startTime: String?,
     val status: String?,
     val timeLimit: Int?,
-    val walkies: List<User>
+    val time: Int?,
+    val walkies: List<User>,
 )
