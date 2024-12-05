@@ -31,6 +31,7 @@ data class ChallengeDetailResponse(
             challenge.startTime,
             challenge.status,
             challenge.timeLimit,
+            challenge.time,
             walkies.map { it.toUser() }
         )
         return challenge

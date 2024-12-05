@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.whyranoid.domain.model.challenge.ChallengePreview
-import com.whyranoid.presentation.component.ChallengeItem
+import com.whyranoid.presentation.component.challenge.ChallengeItem
 import com.whyranoid.presentation.component.button.WalkiePositiveButton
 import com.whyranoid.presentation.theme.ChallengeColor.getColor
 import com.whyranoid.presentation.theme.WalkieTypography

@@ -1,5 +1,4 @@
 package com.whyranoid.presentation.component
-
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Canvas
@@ -37,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.whyranoid.domain.model.challenge.Challenge
 import com.whyranoid.domain.model.challenge.ChallengeType
 import com.whyranoid.presentation.R
+import com.whyranoid.presentation.component.challenge.ChallengeGoalItem
 import com.whyranoid.presentation.theme.ChallengeColor.getColor
 
 @Composable

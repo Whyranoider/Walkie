@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.whyranoid.presentation.component.ChallengeGoalContent
+import com.whyranoid.presentation.component.challenge.ChallengeGoalIndicator
 import com.whyranoid.presentation.component.UserIcon
 import com.whyranoid.presentation.component.bottomsheet.ChallengeExitModalBottomSheetContainer
 import com.whyranoid.presentation.component.button.WalkiePositiveButton
@@ -142,7 +142,7 @@ fun ChallengeDetailContent(
                         .padding(paddingValues)
                         .verticalScroll(scrollState),
                 ) {
-
+                    // TODO: Async Image
                     AsyncImage(
                         model = challenge.imageUrl,
                         contentDescription = null,
@@ -197,7 +197,7 @@ fun ChallengeDetailContent(
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        ChallengeGoalContent(challenge)
+                        ChallengeGoalIndicator(challenge)
 
                         Spacer(modifier = Modifier.height(42.dp))
 
