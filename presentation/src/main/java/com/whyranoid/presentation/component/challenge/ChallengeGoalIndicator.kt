@@ -105,7 +105,7 @@ fun ChallengeGoalIndicator(challenge: Challenge) {
                         ChallengeGoalItem(
                             modifier = Modifier.weight(1f),
                             goal = "일일 운동 시간",
-                            limit = "${challenge.time}시간"
+                            limit = "${(challenge.time ?: 0) / 60} 시간"
                         )
                     }
 
