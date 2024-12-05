@@ -1,4 +1,4 @@
-package com.whyranoid.presentation.component
+package com.whyranoid.presentation.component.challenge
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

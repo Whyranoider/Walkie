@@ -35,8 +35,8 @@ import androidx.navigation.NavController
 import com.whyranoid.domain.model.challenge.ChallengePreview
 import com.whyranoid.domain.model.challenge.ChallengeType
 import com.whyranoid.presentation.R
-import com.whyranoid.presentation.component.ChallengeItem
-import com.whyranoid.presentation.component.ChallengingItem
+import com.whyranoid.presentation.component.challenge.ChallengeItem
+import com.whyranoid.presentation.component.challenge.ChallengingItem
 import com.whyranoid.presentation.component.bar.WalkieTopBar
 import com.whyranoid.presentation.reusable.WalkieCircularProgressIndicator
 import com.whyranoid.presentation.theme.ChallengeColor.getColor
