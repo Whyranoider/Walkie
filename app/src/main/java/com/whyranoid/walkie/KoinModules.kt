@@ -145,7 +145,7 @@ val viewModelModule =
         viewModel { AddPostViewModel(get()) }
         viewModel { SearchFriendViewModel(get(), get(), get()) }
         viewModel { DialogViewModel(get(), get(), get(), get(), get(), get()) }
-        viewModel { CommunityScreenViewModel(get(), get(), get(), get(), get()) }
+        viewModel { CommunityScreenViewModel(get(), get(), get(), get(), get(), get(), get()) }
         viewModel { FollowingViewModel(get(), get(), get(), get(), get(), get()) }
         viewModel { SettingViewModel(get(), get()) }
         viewModel { TotalBadgeViewModel(get(), get()) }
@@ -172,7 +172,7 @@ val dataSourceModule =
         single<ChallengeDataSource> { ChallengeDataSourceImpl(get()) }
         single<PostDataSource> { PostDataSourceImpl(get()) }
         single<UserDataSource> { UserDataSourceImpl(get()) }
-        single<AccountDataSource> { AccountDataSourceImpl(get()) }
+        single<AccountDataSource> { AccountDataSourceImpl(get(),get()) }
         single<FollowDataSource> { FollowDataSourceImpl(get()) }
         single<RunningControlDataSource> { RunningControlDataSourceImpl(get()) }
         single<CommunityDataSource> { CommunityDataSourceImpl(get()) }

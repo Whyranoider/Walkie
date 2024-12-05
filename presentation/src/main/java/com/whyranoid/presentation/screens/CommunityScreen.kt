@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.whyranoid.presentation.component.bar.WalkieTopBar
 import com.whyranoid.presentation.component.community.PostItem
+import com.whyranoid.presentation.component.community.RunningFollowerItem
 import com.whyranoid.presentation.component.running.RunningFollowerItemWithLikable
 import com.whyranoid.presentation.theme.WalkieColor
 import com.whyranoid.presentation.theme.WalkieTypography
@@ -119,6 +120,16 @@ fun CommunityScreen(navController: NavController) {
             modifier = Modifier.padding(it)
         ) {
             LazyRow {
+                state.myThumbnailState.getDataOrNull()?.let { myInfo ->
+                    item {
+                        RunningFollowerItem(
+                            user = myInfo,
+                            onClickProfile = {
+                                navController.navigate(Screen.MyPage.route)
+                            },
+                        )
+                    }
+                }
                 state.runningFollowerState.getDataOrNull()?.let { (running, notRunning) ->
                     items(running.size) {
                         RunningFollowerItemWithLikable(

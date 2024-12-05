@@ -5,14 +5,14 @@ import com.whyranoid.data.model.account.ChangeMyInfoResponse
 import com.whyranoid.data.model.account.LeaveResponse
 import com.whyranoid.data.model.account.LoginDataResponse
 import com.whyranoid.data.model.account.NickCheckResponse
-import com.whyranoid.data.model.account.SignUpRequest
 import com.whyranoid.data.model.account.SignUpResponse
 import com.whyranoid.data.model.account.UserInfoResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Query
@@ -23,9 +23,15 @@ interface AccountService {
         @Query("userName") nickName: String,
     ): Response<NickCheckResponse>
 
+    @Multipart
     @POST(API.SIGN_UP)
     suspend fun signUp(
-        @Body signUpRequest: SignUpRequest,
+        @Part("userName") userName: RequestBody,
+        @Part("name") name: RequestBody,
+        @Part profileImg: MultipartBody.Part,
+        @Part("authId") authId: RequestBody,
+        @Part("agreeGps") agreeGps: RequestBody,
+        @Part("agreeSubscription") agreeSubscription: RequestBody,
     ): Response<SignUpResponse>
 
     @GET(API.LOGIN)

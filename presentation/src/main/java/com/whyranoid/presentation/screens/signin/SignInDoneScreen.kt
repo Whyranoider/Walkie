@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -33,7 +34,10 @@ fun SignInDoneScreen(onSuccess: () -> Unit) {
 
     Surface(modifier = Modifier.background(Color.White)) {
         Column(
-            Modifier.fillMaxSize().padding(20.dp),
+            Modifier
+                .fillMaxSize()
+                .systemBarsPadding()
+                .padding(20.dp),
             horizontalAlignment = Alignment.Start,
         ) {
             Text(
@@ -44,7 +48,9 @@ fun SignInDoneScreen(onSuccess: () -> Unit) {
             Text("워키와 건강한 라이프 함께해요!", style = WalkieTypography.Body1_Normal)
             Spacer(modifier = Modifier.weight(1f))
             Button(
-                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
                 onClick = {
                     onSuccess()
                 },
