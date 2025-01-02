@@ -101,6 +101,8 @@ fun PostingScreen(runningHistory: RunningHistory, finish: () -> Unit) {
     val viewModel = koinViewModel<AddPostViewModel>()
     val isUploading = viewModel.uploadingState.collectAsStateWithLifecycle()
 
+    var runningHistoryState by remember { mutableStateOf(runningHistory) }
+
     val listState = rememberLazyListState()
 
     LazyColumn(
@@ -124,6 +126,16 @@ fun PostingScreen(runningHistory: RunningHistory, finish: () -> Unit) {
                     modifier = Modifier
                         .align(Alignment.Center)
                         .padding(bottom = 24.dp),
+                )
+
+                Text(
+                    style = WalkieTypography.Body1_Normal,
+                    text = "초기화",
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(bottom = 24.dp).clickable {
+                            runningHistoryState = runningHistory.copy(bitmap = null)
+                        },
                 )
             }
 
@@ -149,7 +161,6 @@ fun PostingScreen(runningHistory: RunningHistory, finish: () -> Unit) {
                     }
             }
 
-            var runningHistoryState by remember { mutableStateOf(runningHistory) }
 
             Map(runningHistoryState, textVisibleState, isUploading.value, text)
 
@@ -206,7 +217,7 @@ fun PostingScreen(runningHistory: RunningHistory, finish: () -> Unit) {
                     },
                     onPermissionDismiss = {
                         photoEditState = false
-                    }
+                    },
                 )
             } else {
                 BasicTextField(
