@@ -55,7 +55,7 @@ fun GalleryGrid(
     onPermissionDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
-    val hasPermission = checkPermission(context)
+    val hasPermission = remember { checkPermission(context) }
 
     if (hasPermission.not()) {
         PermissionDialog(
@@ -73,7 +73,8 @@ fun GalleryGrid(
 
 
         LazyVerticalGrid(
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier
+                .fillMaxWidth()
                 .height(400.dp),
             columns = GridCells.Fixed(column),
             contentPadding = PaddingValues(4.dp),
