@@ -65,6 +65,7 @@ class AccountRepositoryImpl(
                 accountDataStore.updateUId(uid)
                 accountDataStore.updateUserName(name)
                 accountDataStore.updateNickName(nickname)
+                accountDataStore.updateAuthId(authorId)
                 profileImg?.let { url -> accountDataStore.updateProfileUrl(url) }
                 return@runCatching it.walkieId
             }.onFailure {

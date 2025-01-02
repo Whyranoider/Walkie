@@ -4,6 +4,7 @@ import com.whyranoid.data.API
 import com.whyranoid.data.model.account.NickProfileResponse
 import com.whyranoid.data.model.running.LikeTotalResponse
 import com.whyranoid.data.model.running.RunningFinishRequest
+import com.whyranoid.data.model.running.RunningFinishResponse
 import com.whyranoid.data.model.running.RunningStartRequest
 import com.whyranoid.data.model.running.SendLikeRequest
 import retrofit2.Response
@@ -17,7 +18,7 @@ interface RunningService {
     suspend fun runningStart(@Body runningStartRequest: RunningStartRequest): Response<Long>
 
     @POST(API.WalkingControl.RUNNING_FINISH)
-    suspend fun runningFinish(@Body runningFinishRequest: RunningFinishRequest): Response<Unit>
+    suspend fun runningFinish(@Body runningFinishRequest: RunningFinishRequest): Response<RunningFinishResponse>
 
     @POST(API.WalkingControl.SEND_LIKE)
     suspend fun sendLike(@Body sendLikeRequest: SendLikeRequest): Response<LikeTotalResponse>
