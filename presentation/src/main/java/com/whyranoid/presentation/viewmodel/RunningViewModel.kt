@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.whyranoid.domain.model.running.CompletedRunning
 import com.whyranoid.domain.model.running.RunningData
 import com.whyranoid.domain.model.running.RunningHistory
 import com.whyranoid.domain.model.running.RunningPosition
@@ -16,6 +17,7 @@ import com.whyranoid.domain.usecase.running.GetRunningFollowerUseCase
 import com.whyranoid.domain.usecase.running.RunningFinishUseCase
 import com.whyranoid.domain.usecase.running.RunningStartUseCase
 import com.whyranoid.domain.usecase.running.SendLikeUseCase
+import com.whyranoid.domain.util.toFormattedTimeStamp
 import com.whyranoid.presentation.model.UiState
 import com.whyranoid.presentation.model.running.RunningFollower
 import com.whyranoid.presentation.model.running.RunningInfo
@@ -24,14 +26,20 @@ import com.whyranoid.presentation.model.running.TrackingMode
 import com.whyranoid.runningdata.RunningDataManager
 import com.whyranoid.runningdata.model.RunningFinishData
 import com.whyranoid.runningdata.model.RunningState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 
-sealed class RunningScreenSideEffect
+sealed interface RunningScreenSideEffect {
+    data class CompleteChallenge(
+        val completedChallenges: List<CompletedRunning>,
+    ) : RunningScreenSideEffect
+}
 
 data class RunningScreenState(
     val runningState: UiState<RunningState> = UiState.Idle,
@@ -45,6 +53,7 @@ data class RunningScreenState(
     val editState: UiState<Boolean> = UiState.Idle,
     val selectedImage: UiState<Uri> = UiState.Idle,
     val savingState: UiState<SavingState> = UiState.Idle,
+    val historyId: UiState<Long> = UiState.Idle,
 )
 
 class RunningViewModel(
@@ -126,20 +135,18 @@ class RunningViewModel(
                 }
             }
         }
-        viewModelScope.launch {
+        intent {
             runningDataManager.runningState.collect { runningState ->
-                intent {
-                    reduce {
-                        val runningInfo =
-                            runningState.runningData.toWalikeRunningData().toRunningInfo()
-                        state.copy(
-                            runningState = UiState.Success(runningState),
-                            runningInfoState = UiState.Success(runningInfo),
-                            trackingModeState = UiState.Success(
-                                state.trackingModeState.getDataOrNull() ?: TrackingMode.FOLLOW,
-                            ),
-                        )
-                    }
+                reduce {
+                    val runningInfo =
+                        runningState.runningData.toWalikeRunningData().toRunningInfo()
+                    state.copy(
+                        runningState = UiState.Success(runningState),
+                        runningInfoState = UiState.Success(runningInfo),
+                        trackingModeState = UiState.Success(
+                            state.trackingModeState.getDataOrNull() ?: TrackingMode.FOLLOW,
+                        ),
+                    )
                 }
             }
         }
@@ -152,7 +159,10 @@ class RunningViewModel(
                 runningRepository.removeListener()
                 intent {
                     reduce {
-                        state.copy(trackingModeState = UiState.Success(TrackingMode.FOLLOW))
+                        state.copy(
+                            trackingModeState = UiState.Success(TrackingMode.FOLLOW),
+                            historyId = UiState.Success(it),
+                        )
                     }
                 }
             }.onFailure {
@@ -175,27 +185,48 @@ class RunningViewModel(
         }
     }
 
-    fun finishRunning() {
-        viewModelScope.launch {
-            runningFinishUseCase().onSuccess {
-                intent {
-                    state.runningInfoState.getDataOrNull()?.let {
-                        reduce {
-                            state.copy(runningResultInfoState = UiState.Success(it))
-                        }
-                    }
-                }
-                runningDataManager.finishRunning().onSuccess { runningFinishData ->
-                    intent {
-                        reduce {
-                            state.copy(runningFinishState = UiState.Success(runningFinishData))
-                        }
-                    }
-                }
-            }.onFailure {
-                Log.d("finishRunning Failure", it.message.toString())
+    fun finishRunning() = intent {
+
+        runningDataManager.finishRunning().onSuccess { runningFinishData ->
+
+            reduce {
+                state.copy(
+                    runningFinishState = UiState.Success(runningFinishData)
+                )
             }
+
+            val runningInfo = state.runningInfoState.getDataOrNull()
+
+            if (runningInfo != null) {
+
+                reduce {
+                    state.copy(
+                        runningResultInfoState = UiState.Success(runningInfo),
+                    )
+                }
+
+                val result = runningFinishUseCase(
+                    state.historyId.getDataOrNull()?.toInt() ?: 0,
+                    runningFinishData.runningHistory.finishedAt.toFormattedTimeStamp(),
+                    runningFinishData.runningHistory.totalRunningTime,
+                    runningFinishData.runningHistory.totalDistance,
+                    state.runningInfoState.getDataOrNull()?.calories?.toInt() ?: 0,
+                    state.runningInfoState.getDataOrNull()?.steps ?: 0,
+                )
+
+                result.onSuccess { completedIssues ->
+
+                    postSideEffect(RunningScreenSideEffect.CompleteChallenge(completedIssues))
+
+                }.onFailure {
+                    Log.d("finishRunning Failure", it.message.toString())
+                }
+            }
+
+        }.onFailure {
+            Log.d("finishRunning Failure", it.message.toString())
         }
+
     }
 
     fun onTrackingButtonClicked() {
@@ -207,12 +238,15 @@ class RunningViewModel(
                             TrackingMode.NONE -> {
                                 TrackingMode.NO_FOLLOW
                             }
+
                             TrackingMode.NO_FOLLOW -> {
                                 TrackingMode.FOLLOW
                             }
+
                             TrackingMode.FOLLOW -> {
                                 TrackingMode.NONE
                             }
+
                             else -> {
                                 TrackingMode.FOLLOW
                             }
