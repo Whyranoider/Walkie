@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -54,7 +55,7 @@ fun GalleryGrid(
     onPermissionDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
-    val hasPermission = checkPermission(context)
+    val hasPermission = remember { checkPermission(context) }
 
     if (hasPermission.not()) {
         PermissionDialog(
@@ -72,7 +73,9 @@ fun GalleryGrid(
 
 
         LazyVerticalGrid(
-            modifier = modifier,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(400.dp),
             columns = GridCells.Fixed(column),
             contentPadding = PaddingValues(4.dp),
             horizontalArrangement = Arrangement.spacedBy(2.dp),

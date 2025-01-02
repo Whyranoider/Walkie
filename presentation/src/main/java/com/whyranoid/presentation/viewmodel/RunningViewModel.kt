@@ -291,6 +291,12 @@ class RunningViewModel(
         }
     }
 
+    fun removeImage() = intent {
+        reduce {
+            state.copy(selectedImage = UiState.Idle)
+        }
+    }
+
     fun saveHistory(bitmap: Bitmap, finishData: RunningFinishData) {
         if (savedHistory == finishData.runningPositionList) return
         savedHistory = finishData.runningPositionList

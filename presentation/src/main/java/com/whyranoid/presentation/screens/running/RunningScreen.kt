@@ -34,7 +34,6 @@ import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
-import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -136,6 +135,7 @@ fun RunningScreen(
         viewModel::saveHistory,
         viewModel::takeSnapShot,
         viewModel::sendLike,
+        viewModel::removeImage,
         onClickProfile = { user ->
             navController.navigate("userPage/${user.uid}/${user.nickname}/${true}")
         },
@@ -157,6 +157,7 @@ fun RunningContent(
     saveHistory: (Bitmap, RunningFinishData) -> Unit,
     onTakeSnapShot: (RunningFinishData) -> Unit,
     onSendLike: (uid: Long) -> Unit,
+    onRemoveImage: () -> Unit,
     onClickProfile: (user: User) -> Unit,
 ) {
     Column(
@@ -172,6 +173,7 @@ fun RunningContent(
             saveHistory,
             onSendLike,
             onClickProfile,
+            onRemoveImage,
         )
         RunningInfoScreen(
             modifier = Modifier.height(280.dp),
@@ -210,6 +212,7 @@ fun RunningMapScreen(
     onSaveHistory: (Bitmap, RunningFinishData) -> Unit,
     onSendLike: (uid: Long) -> Unit,
     onClickProfile: (user: User) -> Unit,
+    onRemoveImage: () -> Unit,
 ) {
     var mapProperties by remember {
         mutableStateOf(
@@ -384,13 +387,19 @@ fun RunningMapScreen(
                         modifier = Modifier.clickable { onEditClose() },
                     )
                     Text("이미지", style = WalkieTypography.SubTitle)
-                    Icon(
-                        Icons.Outlined.PhotoCamera,
-                        "camera",
-                        modifier = Modifier.clickable {
-                            /* TODO */
-                        },
-                    )
+
+                    Text("초기화", style = WalkieTypography.Body1_Normal, modifier = Modifier.clickable {
+                        onRemoveImage()
+                    })
+
+
+//                    Icon(
+//                        Icons.Outlined.PhotoCamera,
+//                        "camera",
+//                        modifier = Modifier.clickable {
+//                            /* TODO */
+//                        },
+//                    )
                 }
             }
         }
@@ -545,7 +554,7 @@ fun RunningInfoScreen(
                 modifier = modifier
                     .background(Color.White),
                 onImageSelected = { uri -> onSelectImage(uri) },
-                onPermissionDismiss = onPermissionDismiss
+                onPermissionDismiss = onPermissionDismiss,
             )
         }
         return
