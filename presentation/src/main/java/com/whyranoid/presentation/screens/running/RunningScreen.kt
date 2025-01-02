@@ -554,7 +554,7 @@ fun RunningInfoScreen(
                 modifier = modifier
                     .background(Color.White),
                 onImageSelected = { uri -> onSelectImage(uri) },
-                onPermissionDismiss = onPermissionDismiss,
+                onPermissionDismiss = { onPermissionDismiss() },
             )
         }
         return
