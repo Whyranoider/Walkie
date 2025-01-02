@@ -8,6 +8,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.whyranoid.domain.datasource.RunningControlDataSource
+import com.whyranoid.domain.model.running.CompletedRunning
 import com.whyranoid.domain.model.running.UserLocation
 import com.whyranoid.domain.repository.RunningRepository
 import com.whyranoid.runningdata.RunningDataManager
@@ -44,8 +45,24 @@ class RunningRepositoryImpl(
     }
 
     // TODO API 연결 및 성공 후 저장
-    override suspend fun finishRunning(uid: Long): Result<Unit> {
-        return runningControlDataSource.runningFinish(uid)
+    override suspend fun finishRunning(
+        uid: Long,
+        authId: String,
+        historyId: Int,
+        endTime: String,
+        totalTime: Int,
+        distance: Double,
+        calorie: Int,
+        step: Int
+        ): Result<List<CompletedRunning>> {
+        return runningControlDataSource.runningFinish(uid,
+            authId,
+            historyId,
+            endTime,
+            totalTime,
+            distance,
+            calorie,
+            step)
     }
 
     override fun listenLocation() {

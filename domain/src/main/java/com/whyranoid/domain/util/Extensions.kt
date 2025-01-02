@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 val String.Companion.EMPTY: String get() = ""
 
@@ -34,3 +36,8 @@ fun getDurationDifference(startDate: String, endDate: String): List<Long> {
     return listOf(days, hours, minutes)
 }
 
+fun Long.toFormattedTimeStamp(): String {
+    val date = Date(this)
+    val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    return format.format(date)
+}

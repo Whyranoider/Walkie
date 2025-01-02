@@ -87,6 +87,7 @@ import com.whyranoid.presentation.theme.WalkieTypography
 import com.whyranoid.presentation.util.dpToPx
 import com.whyranoid.presentation.util.toPace
 import com.whyranoid.presentation.util.toRunningTime
+import com.whyranoid.presentation.viewmodel.RunningScreenSideEffect
 import com.whyranoid.presentation.viewmodel.RunningScreenState
 import com.whyranoid.presentation.viewmodel.RunningViewModel
 import com.whyranoid.presentation.viewmodel.RunningViewModel.Companion.MAP_MAX_ZOOM
@@ -95,6 +96,7 @@ import com.whyranoid.runningdata.model.RunningFinishData
 import com.whyranoid.runningdata.model.RunningState
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun RunningScreen(
@@ -102,6 +104,16 @@ fun RunningScreen(
     startWorker: () -> Unit,
 ) {
     val viewModel = koinViewModel<RunningViewModel>()
+    val state by viewModel.collectAsState()
+
+    viewModel.collectSideEffect {
+        when (it) {
+            is RunningScreenSideEffect.CompleteChallenge -> { it
+                // todo: navigation elements
+                println("완료한 것 "+ it)
+            }
+        }
+    }
 
     LaunchedEffect(LocalLifecycleOwner.current) {
         viewModel.startWorker = startWorker
@@ -109,8 +121,6 @@ fun RunningScreen(
         viewModel.getRunningFollowingsState()
         viewModel.onTrackingButtonClicked()
     }
-
-    val state by viewModel.collectAsState()
 
     RunningContent(
         state,
