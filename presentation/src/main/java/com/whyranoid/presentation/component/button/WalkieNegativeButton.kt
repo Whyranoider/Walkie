@@ -1,11 +1,10 @@
 package com.whyranoid.presentation.component.button
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,22 +16,20 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun WalkieNegativeButton(
+    modifier: Modifier = Modifier,
     text: String,
+    isEnabled: Boolean = true,
     onClicked: () -> Unit = {}
 ) {
-    OutlinedButton(
-        modifier = Modifier
+    Button(
+        modifier = modifier
             .fillMaxWidth()
             .height(50.dp)
-            .clip(shape = RoundedCornerShape(15.dp))
-            .border(
-                width = 1.dp,
-                color = Color(0xFFFB8947),
-                shape = RoundedCornerShape(15.dp)
-            ),
-        colors = ButtonDefaults.outlinedButtonColors(
-            backgroundColor = Color.White,
-            contentColor = Color(0xFFFB8947)
+            .clip(shape = RoundedCornerShape(15.dp)),
+        enabled = isEnabled,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = if (isEnabled) Color(0xFFBDBDBD) else Color(0xFFBDBDBD),
+            contentColor = Color.White
         ),
         onClick = { onClicked() }) {
         Text(
