@@ -81,6 +81,7 @@ import com.whyranoid.presentation.model.running.SavingState
 import com.whyranoid.presentation.model.running.TrackingMode
 import com.whyranoid.presentation.reusable.CircleProgressWithText
 import com.whyranoid.presentation.reusable.GalleryGrid
+import com.whyranoid.presentation.screens.Screen
 import com.whyranoid.presentation.theme.WalkieColor
 import com.whyranoid.presentation.theme.WalkieTypography
 import com.whyranoid.presentation.util.dpToPx
@@ -105,11 +106,18 @@ fun RunningScreen(
     val viewModel = koinViewModel<RunningViewModel>()
     val state by viewModel.collectAsState()
 
-    viewModel.collectSideEffect {
-        when (it) {
-            is RunningScreenSideEffect.CompleteChallenge -> { it
-                // todo: navigation elements
-                println("완료한 것 "+ it)
+    viewModel.collectSideEffect { event ->
+        when (event) {
+            is RunningScreenSideEffect.CompleteChallenge -> {
+                event.completedChallenges.forEach { completedChallenge ->
+                    navController.navigate(
+                        Screen.ChallengeCompleteScreen.route
+                            .replace(
+                                "{challengeId}",
+                                completedChallenge.challengeId.toString()
+                            )
+                    )
+                }
             }
         }
     }
@@ -388,9 +396,12 @@ fun RunningMapScreen(
                     )
                     Text("이미지", style = WalkieTypography.SubTitle)
 
-                    Text("초기화", style = WalkieTypography.Body1_Normal, modifier = Modifier.clickable {
-                        onRemoveImage()
-                    })
+                    Text(
+                        "초기화",
+                        style = WalkieTypography.Body1_Normal,
+                        modifier = Modifier.clickable {
+                            onRemoveImage()
+                        })
 
 
 //                    Icon(
