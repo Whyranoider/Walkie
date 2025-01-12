@@ -102,6 +102,7 @@ import com.whyranoid.presentation.viewmodel.SplashViewModel
 import com.whyranoid.presentation.viewmodel.TotalBadgeViewModel
 import com.whyranoid.presentation.viewmodel.UserPageViewModel
 import com.whyranoid.presentation.viewmodel.UserPostsViewModel
+import com.whyranoid.presentation.viewmodel.challenge.ChallengeCompleteViewModel
 import com.whyranoid.presentation.viewmodel.challenge.ChallengeDetailViewModel
 import com.whyranoid.presentation.viewmodel.challenge.ChallengeExitViewModel
 import com.whyranoid.presentation.viewmodel.challenge.ChallengeMainViewModel
@@ -123,6 +124,7 @@ val viewModelModule =
         viewModel { ChallengeMainViewModel(get(), get(), get(), get(), get()) }
         viewModel { ChallengeDetailViewModel(get(), get(), get()) }
         viewModel { ChallengeExitViewModel(get(), get()) }
+        viewModel { ChallengeCompleteViewModel(get()) }
         viewModel {
             UserPageViewModel(
                 get(),
