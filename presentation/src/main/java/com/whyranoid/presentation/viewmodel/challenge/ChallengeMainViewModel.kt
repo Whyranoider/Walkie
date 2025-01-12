@@ -51,7 +51,7 @@ class ChallengeMainViewModel(
         getTopRankChallengeItems()
     }
 
-    private fun getNewChallengeItems() = intent {
+    fun getNewChallengeItems() = intent {
         reduce {
             state.copy(newChallengePreviewsState = UiState.Loading)
         }
@@ -70,7 +70,7 @@ class ChallengeMainViewModel(
 
     }
 
-    private fun getChallengingItems() = intent {
+    fun getChallengingItems() = intent {
         reduce {
             state.copy(challengingPreviewsState = UiState.Loading)
         }
@@ -88,7 +88,7 @@ class ChallengeMainViewModel(
 
     }
 
-    private fun getTopRankChallengeItems() = intent {
+    fun getTopRankChallengeItems() = intent {
         reduce {
             state.copy(typedChallengePreviewsState = UiState.Loading)
         }
@@ -103,7 +103,7 @@ class ChallengeMainViewModel(
         }
     }
 
-    private fun getTypedChallengeItems() = intent {
+    fun getTypedChallengeItems() = intent {
         reduce {
             state.copy(typedChallengePreviewsState = UiState.Loading)
         }

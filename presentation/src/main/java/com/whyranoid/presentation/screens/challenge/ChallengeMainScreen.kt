@@ -21,6 +21,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -56,6 +57,15 @@ fun ChallengeMainScreen(
     val viewModel = koinViewModel<ChallengeMainViewModel>()
 
     val state by viewModel.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.apply {
+            getNewChallengeItems()
+            getChallengingItems()
+            getTypedChallengeItems()
+            getTopRankChallengeItems()
+        }
+    }
 
     ChallengeMainContent(
         state,
